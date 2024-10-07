@@ -4,7 +4,7 @@ import os
 ssids = ["FakeWiFi_1", "FakeWiFi_2", "FakeWiFi_3", "FakeWiFi_4"]
 
 # Set the Wi-Fi interface to use
-interface = "wlan0"  # Replace with your Wi-Fi adapter name
+interface = "Wireless LAN adapter WiFi"  # Replace with your Wi-Fi adapter name
 
 # Automate the creation of multiple SSIDs using airbase-ng
 def create_multiple_ssids(interface, ssids):
