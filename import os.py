@@ -1,25 +1,24 @@
 import os
 
-# Configuration details
-ssid = "FakeWiFi"
-interface = "wlan0"  # Replace with your wireless interface name
-channel = "6"  # Wi-Fi channel
+# List of SSIDs to create
+ssids = ["FakeWiFi_1", "FakeWiFi_2", "FakeWiFi_3", "FakeWiFi_4"]
 
-# Create a configuration file for hostapd
-hostapd_conf = f"""
-interface={interface}
-driver=nl80211
-ssid={ssid}
-hw_mode=g
-channel={channel}
-"""
+# Set the Wi-Fi interface to use
+interface = "wlan0"  # Replace with your Wi-Fi adapter name
 
-# Write the hostapd configuration file
-with open("hostapd.conf", "w") as file:
-    file.write(hostapd_conf)
+# Automate the creation of multiple SSIDs using airbase-ng
+def create_multiple_ssids(interface, ssids):
+    # Put the interface into monitor mode
+    os.system(f"sudo ifconfig {interface} down")
+    os.system(f"sudo iwconfig {interface} mode monitor")
+    os.system(f"sudo ifconfig {interface} up")
 
-# Create a command to run hostapd
-hostapd_command = f"sudo hostapd hostapd.conf"
+    # Create each SSID on different channels
+    for i, ssid in enumerate(ssids):
+        channel = 6 + i  # Set each SSID to a different channel
+        command = f"sudo airbase-ng -e \"{ssid}\" -c {channel} {interface} &"
+        os.system(command)
+        print(f"Started SSID: {ssid} on channel {channel}")
 
-# Execute the hostapd command
-os.system(hostapd_command)
+# Create the fake SSIDs
+create_multiple_ssids(interface, ssids)
